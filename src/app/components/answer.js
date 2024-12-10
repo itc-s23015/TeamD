@@ -59,7 +59,7 @@ const Answer = () => {
           <button 
             type="submit"
             className={styles.button}
-            disabled={isCorrect || lives <= 0 || answer.trim() === ""}>
+            disabled={isCorrect || lives <= 0 || answer.trim() === ""}>// フォーム空のとき回答不可
             回答
           </button>
         </div>
