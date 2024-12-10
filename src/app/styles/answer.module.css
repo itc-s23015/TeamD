@@ -55,3 +55,26 @@
 .button:hover {
   background-color: #e04444;
 }
+
+.message {
+  /* margin-top: 20px; */
+  font-size: 100px;
+  color: #e04444;
+  font-weight: bold;
+}
+
+.messageContainer {
+  position: fixed; /* 画面に固定 */
+  top: 270px; /* キャンパスの上に配置 */
+  left: 50%; /* 中央に配置 */
+  transform: translateX(-50%); /* 中央揃え */
+  font-size: 20px;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.message {
+  margin: 0;
+}
