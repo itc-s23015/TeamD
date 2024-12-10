@@ -8,7 +8,7 @@
   }
   
   .title {
-    font-size: 48px; /* タイトルのフォントサイズを大きく */
+    font-size: 70px; /* タイトルのフォントサイズを大きく */
     font-weight: bold;
     margin-bottom: 50px; /* タイトルと入力フィールドの間隔を調整 */
   }
@@ -19,9 +19,9 @@
   }
   
   .input {
-    width: 400px; /* 入力フィールドの幅を広く */
-    height: 80px; /* 入力フィールドの高さ */
-    font-size: 50px; /* 入力フィールド内文字のサイズ */
+    width: 600px; /* 入力フィールドの幅を広く */
+    height: 100px; /* 入力フィールドの高さ */
+    font-size: 70px; /* 入力フィールド内文字のサイズ */
     padding: 0 15px; /* パディングを追加して余裕を持たせる */
     margin-right: 20px;
     border: 2px solid #ccc; /* 境界線のスタイルを追加 */
@@ -34,7 +34,7 @@
     color: white;
     border: none;
     padding: 15px 30px; /* ボタンの内側スペースを大きく */
-    font-size: 40px; /* ボタンの文字サイズ */
+    font-size: 50px; /* ボタンの文字サイズ */
     cursor: pointer;
     border-radius: 8px; /* ボタンの角を丸く */
     transition: transform 0.2s ease, background-color 0.2s ease; /* ホバーアニメーション */

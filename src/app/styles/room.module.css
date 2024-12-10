@@ -8,7 +8,7 @@
 }
 
 .title {
-  font-size: 80px; /* タイトルをさらに大きく */
+  font-size: 130px; /* タイトルをさらに大きく */
   font-weight: bold;
   margin-bottom: 60px;
 }
@@ -23,7 +23,7 @@
   color: white;
   border: none;
   padding: 20px 40px; /* ボタンをさらに大きく */
-  font-size: 36px; /* ボタンの文字サイズをさらに大きく */
+  font-size: 50px; /* ボタンの文字サイズをさらに大きく */
   cursor: pointer;
   border-radius: 10px; /* ボタンの丸みを調整 */
   transition: transform 0.2s ease, background-color 0.2s ease;
@@ -39,7 +39,7 @@
   color: white;
   border: none;
   padding: 20px 40px; /* ボタンをさらに大きく */
-  font-size: 36px; /* ボタンの文字サイズをさらに大きく */
+  font-size: 50px; /* ボタンの文字サイズをさらに大きく */
   cursor: pointer;
   border-radius: 10px; /* ボタンの丸みを調整 */
   transition: transform 0.2s ease, background-color 0.2s ease;
@@ -51,7 +51,7 @@
 }
 
 .orText {
-  font-size: 36px; /* テキストサイズをさらに大きく */
+  font-size: 50px; /* テキストサイズをさらに大きく */
   margin: 0 40px; /* ボタン間の間隔をさらに広げる */
   color: #333;
   font-weight: bold; /* 太字を維持 */

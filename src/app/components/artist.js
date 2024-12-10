@@ -187,7 +187,7 @@ export default function Artist() {
           </div>
 
           <div className={styles.sizes}>
-            {[5, 10, 20, 30].map((size) => (
+            {[10, 20, 30, 40].map((size) => (
               <button
                 key={size}
                 className={`${styles.sizeButton} ${lineWidth === size ? styles.selected : ""}`}

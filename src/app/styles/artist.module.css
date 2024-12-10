@@ -11,6 +11,7 @@
   
 .title {
     font-family: Arial, sans-serif;
+    font-size: 50px;
     margin-bottom: 20px;
 }
 
@@ -19,7 +20,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 130px;
+    font-size: 300px;
     font-weight: bold;
     color: #ff4500;
     z-index: 10;
@@ -33,7 +34,7 @@
 }
   
 .topicInput {
-    font-size: 16px;
+    font-size: 32px;
     padding: 10px;
     border: 2px solid #ccc;
     border-radius: 5px;
@@ -46,7 +47,7 @@
 }
   
 .startButton {
-    font-size: 16px;
+    font-size: 28px;
     padding: 10px 20px;
     background-color: #5cb85c;
     color: white;
@@ -72,26 +73,26 @@
     padding: 20px;
     z-index: 10;
     text-align: center;
+    font-size: 32px;
 }
   
 .popupContent p {
     margin-bottom: 20px;
 }
   
-.okButton,
-.cancelButton {
+.okButton,.cancelButton {
     padding: 10px 20px;
-    font-size: 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin: 5px;
+    margin: 15px;
     transition: transform 0.2s ease, background-color 0.3s ease;
 }
   
 .okButton {
     background-color: #5cb85c;
     color: white;
+    font-size: 40px;
 }
   
 .okButton:hover {
@@ -102,6 +103,7 @@
 .cancelButton {
     background-color: #d9534f;
     color: white;
+    font-size: 32px;
 }
   
 .cancelButton:hover {
@@ -125,7 +127,7 @@
   
 .canvas {
     width: 100%;
-    height: 500px; /* Canvas height slightly reduced */
+    height: 650px; /* Canvas height slightly reduced */
     cursor: crosshair;
     display: block;
 }
@@ -160,8 +162,8 @@
 }
   
 .colorButton {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     margin: 5px;
     border: none;
@@ -201,8 +203,9 @@
 }
   
 .clearButton {
-    width: 80px;
-    height: 40px;
+    width: 120px;
+    height: 70px;
+    font-size: 20px;
     background-color: #f5c6cb;
     border-radius: 10px;
     border: none;
