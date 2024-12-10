@@ -3,7 +3,7 @@
 import React from 'react';
 import CreateRoom from '../components/create_room';
 
-export default function RoomPage() {
+export default function CreateRoomPage() {
   return (
     <div>
       <CreateRoom />
