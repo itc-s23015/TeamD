@@ -1,12 +1,12 @@
 'use client'; // クライアントコンポーネントとして指定
 
 import React from 'react';
-import CreateRoom from '../components/create_room';
+import Artist from '../components/artist';
 
-export default function CreateRoomPage() {
+export default function ArtistPage() {
   return (
     <div>
-      <CreateRoom />
+      <Artist />
     </div>
   );
 }
