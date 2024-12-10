@@ -7,7 +7,9 @@ const Answer = () => {
 
   const [answer, setAnswer] = useState("");
   const [lives, setlives] = useState(5);
-  const correctAnswer = "aiu";
+  
+  // 本来の答えを入れるようにする
+  const correctAnswer = "test";
 
   const handleSubmit = (e) => {
     e.preventDefault();
