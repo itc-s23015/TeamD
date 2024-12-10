@@ -22,6 +22,7 @@ const Answer = () => {
   if (answer.trim() === correctAnswer) {
     setMessage("正解!");
     setIsCorrect(true);
+    setTimeout(() => setMessage(""), 1000); // 1秒後にメッセージを消す
     return
   }
 
@@ -29,6 +30,7 @@ const Answer = () => {
     setlives((prev) => {
       const lives = Math.max(prev - 1, 0);
       setMessage(lives > 0 ? "間違いです！": "You are died");
+      setTimeout(() => setMessage(""), 1000); // 1秒後にメッセージを消す
       return lives;
     });
   };
@@ -55,7 +57,10 @@ const Answer = () => {
             disabled={isCorrect || lives <= 0} // 正解、ライフ０で入力不可
           />
 
-          <button type="submit" className={styles.button} disabled={isCorrect || lives <= 0}>
+          <button 
+            type="submit"
+            className={styles.button}
+            disabled={isCorrect || lives <= 0 || answer.trim() === ""}>
             回答
           </button>
         </div>
