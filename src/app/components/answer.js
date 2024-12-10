@@ -28,7 +28,7 @@ const Answer = () => {
     //不正解の場合
     setlives((prev) => {
       const lives = Math.max(prev - 1, 0);
-      setMessage(lives > 0 ? "間違いです！": "ライフがなくなりました");
+      setMessage(lives > 0 ? "間違いです！": "You are died");
       return lives;
     });
   };
