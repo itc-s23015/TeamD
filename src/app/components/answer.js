@@ -15,7 +15,6 @@ const Answer = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
   
-
   if (isCorrect || lives <= 0) return;
 
   // 正解の場合
