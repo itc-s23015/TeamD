@@ -30,32 +30,27 @@ const Answer = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
   
-
     if (isCorrect || lives <= 0) return;
 
-    setAttempts((prev) => {
-      const newAttempts = prev + 1;
+    setAttempts((prev) => prev + 1);
 
   // 正解の場合
     if (answer.trim() === correctAnswer) {
-      correctScore(newAttempts);
+      correctScore(attempts);
       setIsCorrect(true);
-      return newAttempts;
+      return;
     };
 
     //不正解の場合
-    setlives((prevlives) => {
-      const newlives = Math.max(prevlives - 1, 0);
+    setlives((prev) => {
+      const newlives = Math.max(prev - 1, 0);
       setMessage(newlives > 0 ? "間違いです！": "You are died");
-
+       
       setTimeout(() => {
         setMessage("");
       }, 1000);
-
       return newlives;
     });
-    return newAttempts;
-  });
 };
 
   const handleReset = () => {
