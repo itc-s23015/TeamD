@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { calculateScore, resetScore, getRoundScore, resetRound, getCurrentRound } from "./score";
 import styles from "../styles/answer.module.css";
+
 
 const Answer = () => {
   const router = useRouter();
@@ -8,30 +10,54 @@ const Answer = () => {
   const [lives, setlives] = useState(5); // ライフ
   const [isCorrect, setIsCorrect] = useState(false);
   const [message, setMessage] = useState(""); // メッセージ表示用
+  const [startTime, setStartTime] = useState(Date.now());
+  const [attempts, setAttempts] = useState(0);
 
   // 仮の回答
-  const correctAnswer = "test";
+  const correctAnswer = "てっくけつあるこあとるす";
+
+  const correctScore = (attempts) => {
+    const timeTaken = Date.now() - startTime;
+    const question = correctAnswer;
+    const score = calculateScore(timeTaken, attempts, question);
+    setMessage(`正解！得点: ${score}`);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
   
 
-  if (isCorrect || lives <= 0) return;
+    if (isCorrect || lives <= 0) return;
+
+    setAttempts((prev) => {
+      const newAttempts = prev + 1;
 
   // 正解の場合
-  if (answer.trim() === correctAnswer) {
-    setMessage("正解!");
-    setIsCorrect(true);
-    return
-  }
+    if (answer.trim() === correctAnswer) {
+      correctScore(newAttempts);
+      setIsCorrect(true);
+      return newAttempts;
+    }
 
     //不正解の場合
-    setlives((prev) => {
-      const lives = Math.max(prev - 1, 0);
-      setMessage(lives > 0 ? "間違いです！": "You are died");
-      return lives;
+    setlives((prevlives) => {
+      const newlives = Math.max(prevlives - 1, 0);
+      setMessage(newlives > 0 ? "間違いです！": "You are died");
+      return newlives;
     });
-  };
+    return newAttempts;
+  });
+};
+
+  const handleReset = () => {
+    resetScore();
+    setIsCorrect(false);
+    setLives(5);
+    setAttempts(0);
+    setStartTime(Date.now());
+    setAnswer("");
+    setMessage("");
+  }
 
 
   return (
@@ -44,6 +70,7 @@ const Answer = () => {
       </div>
       <form onSubmit={handleSubmit} className={styles.form}>
         <p className={styles.lives}>❤️x{lives}</p>
+        {/* <p>現在のラウンド: {getCurrentRound() + 1}</p> */}
         <div className={styles.inputAndButton}>
 
           <input
@@ -59,6 +86,9 @@ const Answer = () => {
             回答
           </button>
         </div>
+        {/* <button onClick={handleReset}>Score reset</button> */}
+        {/* <div>ラウンドスコア<strong>{getRoundScore(getCurrentRound())}</strong></div> */}
+
       </form>
       </div>
   );
