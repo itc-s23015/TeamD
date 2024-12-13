@@ -21,6 +21,10 @@ const Answer = () => {
     const question = correctAnswer;
     const score = calculateScore(timeTaken, attempts, question);
     setMessage(`正解！得点: ${score}`);
+
+    setTimeout(() => {
+      setMessage("");
+    }, 1000);
   };
 
   const handleSubmit = (e) => {
@@ -37,12 +41,17 @@ const Answer = () => {
       correctScore(newAttempts);
       setIsCorrect(true);
       return newAttempts;
-    }
+    };
 
     //不正解の場合
     setlives((prevlives) => {
       const newlives = Math.max(prevlives - 1, 0);
       setMessage(newlives > 0 ? "間違いです！": "You are died");
+
+      setTimeout(() => {
+        setMessage("");
+      }, 1000);
+
       return newlives;
     });
     return newAttempts;
