@@ -78,3 +78,29 @@
 .message {
   margin: 0;
 }
+
+.livesContainer {
+  position: relative;
+  display: inline-block;
+}
+
+@keyframes fadeOutUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
+.minusOne {
+  position: absolute;
+  top: 10px;
+  right: -10px;
+  font-size: 20px;
+  color: black;
+  animation: fadeOutUp 1s ease-out;
+  pointer-events: none;
+}

@@ -10,16 +10,16 @@ const Answer = () => {
   const [lives, setlives] = useState(5); // ライフ
   const [isCorrect, setIsCorrect] = useState(false);
   const [message, setMessage] = useState(""); // メッセージ表示用
+  const [showMinusOne, setShowMinusOne ] = useState(false);
   const [startTime, setStartTime] = useState(Date.now());
   const [attempts, setAttempts] = useState(0);
-
+  
   // 仮の回答
   const correctAnswer = "てっくけつあるこあとるす";
 
   const correctScore = (attempts) => {
     const timeTaken = Date.now() - startTime;
-    const question = correctAnswer;
-    const score = calculateScore(timeTaken, attempts, question);
+    const score = calculateScore(timeTaken, attempts, correctAnswer);
     setMessage(`正解！得点: ${score}`);
 
     setTimeout(() => {
@@ -44,6 +44,10 @@ const Answer = () => {
     //不正解の場合
     setlives((prev) => {
       const newlives = Math.max(prev - 1, 0);
+
+      setShowMinusOne(true);
+      setTimeout(() => setShowMinusOne(false), 1000);
+
       setMessage(newlives > 0 ? "間違いです！": "You are died");
        
       setTimeout(() => {
@@ -70,13 +74,14 @@ const Answer = () => {
         {message && <p className={styles.message}>{message}</p>}
       </div>
       <h1>これは何でしょう？</h1>
-      <div className={styles.imageWrapper}>
-      </div>
+      <div className={styles.imageWrapper}></div>
       <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.livesContainer}>
         <p className={styles.lives}>❤️x{lives}</p>
+          {showMinusOne && <span className={styles.minusOne}>-1</span>}
+        </div>  
         {/* <p>現在のラウンド: {getCurrentRound() + 1}</p> */}
         <div className={styles.inputAndButton}>
-
           <input
             type="text"
             value={answer}
