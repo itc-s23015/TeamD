@@ -1,0 +1,114 @@
+/* styles/ResultBoard.module.css */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fdf6e3;
+    height: 100vh;
+    /*padding: 20px;*/
+  }
+  
+  .title {
+    font-size: 170px;
+    color: #f28705;
+    margin-top: 0px;
+    margin-bottom: 10px;
+  }
+  
+  .result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+  }
+  
+  .player1 {
+    font-size: 24px;
+    color: white;
+    background-color: #ff0000;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .player2 {
+    font-size: 24px;
+    color: white;
+    background-color: #11ca00;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .winner {
+    font-size: 35px;
+    color: rgb(0, 0, 0);
+    background-color: #ddff00;
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .scores {
+    margin: 20px 0;
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .input {
+    flex: 1;
+    text-align: center;
+    font-size: 50px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .total {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .totalScore {
+    font-size: 28px;
+    text-align: center;
+  }
+  
+  .points {
+    display: block;
+    font-size: 60px;
+    font-weight: bold;
+    color: black;
+    margin-top: 5px;
+  }
+  
+  .backButton {
+    background-color: #f28705;
+    color: white;
+    font-size: 30px;
+    padding: 20px 35px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .backButton:hover {
+    padding: 20px 35px;
+    background-color: #ffea00;
+  }
+  
