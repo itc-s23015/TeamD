@@ -23,13 +23,13 @@ const ResultBoard = () => {
 
   const handleStart = () => {
     Sound();
-    
+    setTimeout(() => {
       router.push('/'); // /room ページに遷移
-
+    }, 500)
   };
 
   const Sound = () => {
-    const audio = new Audio('/audio/kettei18.mp3');
+    const audio = new Audio('../audio/kettei18.mp3');
     audio.play();
   }
   
