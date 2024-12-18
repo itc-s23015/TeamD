@@ -23,8 +23,7 @@ const ResultBoard = () => {
 
   const handleStart = () => {
     Sound();
-    
-      router.push('/'); // /room ページに遷移
+    router.push('/'); // /room ページに遷移
 
   };
 
