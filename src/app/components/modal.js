@@ -8,7 +8,7 @@ const Modal = ({ isOpen, onClose }) => {
         <div className={styles.overlay} onClick={onClose}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.modalContent}>
-                    <h2>伝言ゲームの概要</h2>
+                    <h2>ー伝言ゲームの概要ー</h2>
                     <p>
                         この伝言ゲームは、二人のプレイヤーが交互に「お題」を出し合いながら、絵でそのお題を伝えるゲームです。
                     </p>
