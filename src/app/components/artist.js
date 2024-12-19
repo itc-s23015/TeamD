@@ -6,12 +6,13 @@ export default function Artist() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [lineWidth, setLineWidth] = useState(10);
   const [color, setColor] = useState("#000000");
-  const [timer, setTimer] = useState(300);
+  const [timer, setTimer] = useState(10);
   const [topic, setTopic] = useState("");
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isEraserActive, setIsEraserActive] = useState(false);
   const [countdown, setCountdown] = useState(null);
+  const [welcomePopupVisible, setWelcomePopupVisible] = useState(true);
 
   const getMousePosition = (e) => {
     const canvas = canvasRef.current;
@@ -43,6 +44,15 @@ export default function Artist() {
       }, 3000);
     }
   }, [timer]);
+
+  useEffect(() => {
+    // コンポーネントのロード時にウェルカムポップアップを 3 秒間表示します
+    const timeout = setTimeout(() => {
+      setWelcomePopupVisible(false);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   const startCountdown = () => {
     let counter = 3;
@@ -118,6 +128,12 @@ export default function Artist() {
 
   return (
     <div className={styles.container}>
+      {welcomePopupVisible && (
+        <div className={styles.welcomePopup}>
+          <p>あなたは絵師です！ 🎨</p>
+        </div>
+      )}
+
       <h1 className={styles.title}>お題を描こう！</h1>
 
       <div className={styles.controls}>

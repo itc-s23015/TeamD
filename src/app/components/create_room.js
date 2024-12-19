@@ -1,25 +1,66 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import socket from "../socket"; // グローバルソケットインスタンスをインポート
 import styles from "../styles/createRoom.module.css";
 
 const CreateRoom = () => {
+  const [roomNumber, setRoomNumber] = useState("");
+  const [error, setError] = useState(""); // エラーメッセージの状態
   const router = useRouter();
 
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect(); // ソケット接続を確立
+    }
+
+    // ソケット接続エラーを監視
+    socket.on("connect_error", () => {
+      setError("サーバーへの接続に失敗しました。");
+    });
+
+    // クリーンアップ
+    return () => {
+      socket.off("connect_error");
+    };
+  }, []);
+
   const handleCreateClick = () => {
-    router.push("/wait"); // ボタンを押したら /wait に画面遷移
+    if (/^\d{3}$/.test(roomNumber)) {
+      if (socket.connected) {
+        // ルームを作成
+        socket.emit("createRoom", roomNumber, (response) => {
+          if (response.success) {
+            router.push(`/wait?room=${roomNumber}`); // `wait.js` に遷移
+          } else {
+            setError(response.message || "ルーム作成に失敗しました。");
+          }
+        });
+      } else {
+        setError("ソケット接続が確立されていません。");
+      }
+    } else {
+      setError("ルーム番号は3桁の数字で入力してください。");
+    }
   };
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>ルーム番号を決めて下さい！</h1>
       <div className={styles.inputContainer}>
-        <input type="text" placeholder="777.." className={styles.input} />
+        <input
+          type="text"
+          placeholder="777.."
+          className={styles.input}
+          value={roomNumber}
+          onChange={(e) => setRoomNumber(e.target.value)}
+        />
         <button className={styles.createButton} onClick={handleCreateClick}>
           作成
         </button>
       </div>
+      {error && <div className={styles.error}>{error}</div>} {/* エラーメッセージの表示 */}
     </div>
   );
 };
