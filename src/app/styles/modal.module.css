@@ -32,7 +32,7 @@
     margin-bottom: 10px;
     text-align: center;
   }
-  
+
   .modalContent p {
     margin: 10px 0;
     text-align: center;
@@ -45,6 +45,38 @@
   
   .modalContent ul li {
     margin-bottom: 5px;
+  }
 
+  .modal {
+    position: relative; /* 疑似要素の基準 */
+    background-color: white; /* 背景色を白に設定 */
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    color: black; /* テキスト色を黒に */
+    max-width: 500px; /* 最大幅を指定 */
+    text-align: center; /* コンテンツ中央寄せ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* モーダルの影 */
+    padding: 50px;
+    border-radius: 8px;
+    width: 700px;
+  }
+  
+  /* モーダルの左右の線 */
+  .modal:before,
+  .modal:after {
+    content: '';
+    position: absolute;
+    top: -7px;
+    width: 2px;
+    height: calc(100% + 14px); /* モーダル全体を覆う高さ */
+    background-color: black; /* 線の色を黒に */
+  }
+  
+  .modal:before {
+    left: 7px; /* 左側の線を配置 */
+  }
+  
+  .modal:after {
+    right: 7px; /* 右側の線を配置 */
   }
   
