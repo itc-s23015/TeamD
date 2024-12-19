@@ -10,6 +10,7 @@ export default function Page() {
 
   // スタートボタンがクリックされたときに実行される関数
   const handleStart = () => {
+    
     router.push('/room'); // /room ページに遷移
   };
 

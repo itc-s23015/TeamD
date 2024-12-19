@@ -2,44 +2,46 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { io } from "socket.io-client"; // socket.io-client をインポート
+import socket from "../socket"; // グローバルソケットインスタンスをインポート
 import styles from "../styles/createRoom.module.css";
 
 const CreateRoom = () => {
   const [roomNumber, setRoomNumber] = useState("");
   const [error, setError] = useState(""); // エラーメッセージの状態
   const router = useRouter();
-  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // socketインスタンスを作成
-    const socketInstance = io("http://localhost:4000"); // サーバーのURLを指定
-    setSocket(socketInstance);
+    if (!socket.connected) {
+      socket.connect(); // ソケット接続を確立
+    }
 
-    // ソケット接続のエラーハンドリング
-    socketInstance.on("connect_error", (error) => {
-      setError("ソケット接続に失敗しました。");
+    // ソケット接続エラーを監視
+    socket.on("connect_error", () => {
+      setError("サーバーへの接続に失敗しました。");
     });
 
-    // コンポーネントのクリーンアップ時にソケットを切断
+    // クリーンアップ
     return () => {
-      if (socketInstance) {
-        socketInstance.off("connect_error"); // イベントのクリーンアップ
-        socketInstance.disconnect();
-      }
+      socket.off("connect_error");
     };
   }, []);
 
   const handleCreateClick = () => {
     if (/^\d{3}$/.test(roomNumber)) {
-      if (socket) {
-        socket.emit("joinRoom", roomNumber); // サーバーにルーム作成を送信
-        router.push(`/wait?room=${roomNumber}`); // 待機画面へ遷移
+      if (socket.connected) {
+        // ルームを作成
+        socket.emit("createRoom", roomNumber, (response) => {
+          if (response.success) {
+            router.push(`/wait?room=${roomNumber}`); // `wait.js` に遷移
+          } else {
+            setError(response.message || "ルーム作成に失敗しました。");
+          }
+        });
       } else {
         setError("ソケット接続が確立されていません。");
       }
     } else {
-      setError("ルーム番号は3桁の数字で入力してください");
+      setError("ルーム番号は3桁の数字で入力してください。");
     }
   };
 
