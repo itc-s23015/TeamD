@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../styles/result.module.css';
 import { useRouter } from 'next/navigation';
-
 
 const ResultBoard = () => {
   const router = useRouter(); 
@@ -10,6 +9,8 @@ const ResultBoard = () => {
     player1: [0, 0, 0], // 初期値として3つのスコアを0で設定
     player2: [0, 0, 0],
   });
+
+  const [bgm, setBgm] = useState(null); // BGMの状態管理
 
   const handleInputChange = (e, player, index) => {
     const value = parseInt(e.target.value, 10) || 0; // 数値に変換、無効な値は0
@@ -22,19 +23,36 @@ const ResultBoard = () => {
     scores[player].reduce((sum, score) => sum + score, 0);
 
   const handleStart = () => {
-    Sound();
-    setTimeout(() => {
-      router.push('/'); // /room ページに遷移
-    }, 500)
+    SoundEffect(); // 効果音を再生
+    if (bgm) {
+      bgm.pause();
+      bgm.currentTime = 0; // 再生位置をリセット
+    }
+    router.push('/'); // / ページに遷移
   };
 
-  const Sound = () => {
-    const audio = new Audio('../audio/kettei18.mp3');
+  const SoundEffect = () => {
+    const audio = new Audio('/audio/kettei18.mp3');
     audio.play();
-  }
-  
-  
- 
+  };
+
+  const startBgm = () => {
+    const bgmAudio = new Audio('/audio/BGM_Pop.mp3');
+    bgmAudio.loop = true; // ループ再生
+    bgmAudio.volume = 0.5; // 音量を50%に設定
+    bgmAudio.play();
+    setBgm(bgmAudio); // 状態にBGMを保存
+  };
+
+  useEffect(() => {
+    // クリーンアップでBGMを停止
+    return () => {
+      if (bgm) {
+        bgm.pause();
+        bgm.currentTime = 0;
+      }
+    };
+  }, [bgm]);
 
   return (
     <div className={styles.container}>
@@ -84,15 +102,14 @@ const ResultBoard = () => {
       </div>
 
       <div className={styles.backButton}>
-        <button className={styles.backButton} onClick={handleStart}>戻る</button>
+        <button className={styles.startButton} onClick={startBgm}>
+          BGMを再生
+        </button>
+        <button className={styles.backButton} onClick={handleStart}>
+          戻る
+        </button>
       </div>
-
-      <audio id="btn_audio">
-          <source src="./audio/kettei18.mp3" type="audio/mp3"></source>
-      </audio>
     </div>
-
-    
   );
 };
 
