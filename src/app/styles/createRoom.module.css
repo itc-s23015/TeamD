@@ -44,4 +44,11 @@
     background-color: #e64545; /* ホバー時のボタン色 */
     transform: scale(1.1); /* ホバー時の拡大 */
   }
+
+  .error {
+    color: red;
+    font-size: 20px;
+    margin-top: 16px;
+  }
+
   

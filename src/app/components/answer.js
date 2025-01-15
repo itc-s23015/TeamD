@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { calculateScore, resetScore, getRoundScore, resetRound, getCurrentRound } from "./score";
 import styles from "../styles/answer.module.css";
@@ -13,7 +13,19 @@ const Answer = () => {
   const [showMinusOne, setShowMinusOne ] = useState(false);
   const [startTime, setStartTime] = useState(Date.now());
   const [attempts, setAttempts] = useState(0);
-  
+  const [welcomePopupVisible, setWelcomePopupVisible] = useState(true);
+
+
+  useEffect(() => {
+    // コンポーネントのロード時にウェルカムポップアップを 3 秒間表示します
+    const timeout = setTimeout(() => {
+      setWelcomePopupVisible(false);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+
   // 仮の回答
   const correctAnswer = "てっくけつあるこあとるす";
 
@@ -70,6 +82,11 @@ const Answer = () => {
 
   return (
     <div className={styles.container}>
+      {welcomePopupVisible && (
+        <div className={styles.welcomePopup}>
+          <p>あなたは回答者です！ ✍</p>
+        </div>
+      )}
       <div className={styles.messageContainer}>
         {message && <p className={styles.message}>{message}</p>}
       </div>

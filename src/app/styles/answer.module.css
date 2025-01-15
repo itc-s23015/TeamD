@@ -15,6 +15,23 @@
   border-radius: 8px 0 0 8px; /* 左の角を丸くする */
 }
 
+
+.welcomePopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(253, 242, 178, 0.9);
+  padding: 30px;
+  border: 3px solid #000;
+  border-radius: 15px;
+  font-size: 50px; /* より大きくする */
+  color: #17db38;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
 .form {
   margin-top: 20px;
 }
