@@ -1,20 +1,25 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+"uses client";
+
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { calculateScore, resetScore, getRoundScore, resetRound, getCurrentRound } from "./score";
 import styles from "../styles/answer.module.css";
+import socket from "../socket";
 
 
 const Answer = () => {
   const router = useRouter();
   const [answer, setAnswer] = useState(""); 
-  const [lives, setlives] = useState(5); // ライフ
+  const [lives, setLives] = useState(5); // ライフ
   const [isCorrect, setIsCorrect] = useState(false);
   const [message, setMessage] = useState(""); // メッセージ表示用
   const [showMinusOne, setShowMinusOne ] = useState(false);
   const [startTime, setStartTime] = useState(Date.now());
   const [attempts, setAttempts] = useState(0);
+  const [correctAnswer, setCorrectAnswer] = useState("");
   const [welcomePopupVisible, setWelcomePopupVisible] = useState(true);
 
+const [roomNumber, setRoomNumber] = useState("");
 
   useEffect(() => {
     // コンポーネントのロード時にウェルカムポップアップを 3 秒間表示します
@@ -25,36 +30,63 @@ const Answer = () => {
     return () => clearTimeout(timeout);
   }, []);
 
+  useEffect(() => {
+    const storedRoom = sessionStorage.getItem("roomNumber");
+    if(storedRoom) {
+      setRoomNumber(storedRoom);
+    } else {
+      console.error("ルーム番号が見つかりません");
+      setMessage("room not found")
+    }
+  }, []);
+
+  useEffect(() => {
+    if(!socket.connected)socket.connect();
+  // お題を受信
+  socket.on("themeReceived", ({ theme }) => {
+    console.log(`受信したお題: ${theme}`);
+    setCorrectAnswer(theme);
+  });
+
+  // サーバーから回答の結果を受信
+  socket.on("answerResult", ({ correct }) => {
+    if (correct) {
+      handleCorrectAnswer();
+    } else {
+      handleIncorrectAnswer();
+    }
+  });
+
+  return () => {
+    socket.off("themeReceived");
+    socket.off("answerResult");
+  };
+}, []);
 
   // 仮の回答
-  const correctAnswer = "てっくけつあるこあとるす";
+  // const correctAnswer = "てっくけつあるこあとるす";
 
-  const correctScore = (attempts) => {
+  const handleCorrectAnswer = () => {
     const timeTaken = Date.now() - startTime;
     const score = calculateScore(timeTaken, attempts, correctAnswer);
     setMessage(`正解！得点: ${score}`);
+    setIsCorrect(true);
 
     setTimeout(() => {
       setMessage("");
     }, 1000);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  
-    if (isCorrect || lives <= 0) return;
-
-    setAttempts((prev) => prev + 1);
-
   // 正解の場合
-    if (answer.trim() === correctAnswer) {
-      correctScore(attempts);
-      setIsCorrect(true);
-      return;
-    };
+    // if (answer.trim() === correctAnswer) {
+    //   correctScore(attempts);
+    //   setIsCorrect(true);
+    //   return;
+    // };
 
     //不正解の場合
-    setlives((prev) => {
+  const handleIncorrectAnswer = () => {
+    setLives((prev) => {
       const newlives = Math.max(prev - 1, 0);
 
       setShowMinusOne(true);
@@ -69,16 +101,40 @@ const Answer = () => {
     });
 };
 
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  if(!answer.trim() || isCorrect || lives <= 0) return;
+  setAttempts((prev) => prev + 1);
+
+  console.log(`送信する回答：${answer}, ルーム番号：${roomNumber}`);
+
+  socket.emit("submitAnswer", { roomNumber, answer });
+}
+
+const handleNextRound = () => {
+  console.log("次のラウンドを開始します");
+  socket.emit("roundOver", { roomNumber });
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
+}
+
+useEffect(() => {
+  if (isCorrect || lives <= 0) {
+    setTimeout(handleNextRound, 2000);
+  }
+}, [isCorrect, lives]);
+
   const handleReset = () => {
     resetScore();
     setIsCorrect(false);
     setLives(5);
     setAttempts(0);
-    setStartTime(Date.now());
     setAnswer("");
     setMessage("");
   }
-
 
   return (
     <div className={styles.container}>
@@ -108,7 +164,7 @@ const Answer = () => {
             disabled={isCorrect || lives <= 0} // 正解、ライフ０で入力不可
           />
 
-          <button type="submit" className={styles.button} disabled={isCorrect || lives <= 0}>
+          <button type="button" className={styles.button} onClick={handleSubmit} disabled={isCorrect || lives <= 0}>
             回答
           </button>
         </div>

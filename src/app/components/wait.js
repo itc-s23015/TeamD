@@ -19,6 +19,12 @@ const WaitUI = () => {
 
     if (room) {
       setRoomNumber(room);
+      sessionStorage.setItem("roomNumber", room);
+    } else {
+      setError("ルーム番号が見つかりません");
+      return;
+    }
+    
       if (!socket.connected) {
         socket.connect(); // ソケット接続を確立
       }
@@ -53,7 +59,7 @@ const WaitUI = () => {
       socket.off("assignRole");
       socket.off("connect_error");
     };
-  }}, [router]);
+  }, [router]);
 
   return (
     <div className={styles.container}>

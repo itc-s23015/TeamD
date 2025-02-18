@@ -1,4 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
+import socket from "../socket";
 import styles from "../styles/artist.module.css";
 
 export default function Artist() {
@@ -7,12 +10,25 @@ export default function Artist() {
   const [lineWidth, setLineWidth] = useState(10);
   const [color, setColor] = useState("#000000");
   const [timer, setTimer] = useState(10);
-  const [topic, setTopic] = useState("");
+  const [theme, setTheme] = useState("");
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isEraserActive, setIsEraserActive] = useState(false);
   const [countdown, setCountdown] = useState(null);
   const [welcomePopupVisible, setWelcomePopupVisible] = useState(true);
+  const [error, setError] = useState(""); // エラーメッセージ用の状態を追加
+  
+  const [roomNumber, setRoomNumber] = useState("");
+
+  useEffect(() => {
+    const storedRoom = sessionStorage.getItem("roomNumber");
+    if(storedRoom) {
+      setRoomNumber(storedRoom);
+    } else {
+      console.error("ルーム番号が見つかりません");
+      setError("ルームが見つかりません");
+    }
+  }, []);
 
   const getMousePosition = (e) => {
     const canvas = canvasRef.current;
@@ -25,6 +41,48 @@ export default function Artist() {
       y: (e.clientY - rect.top) * scaleY,
     };
   };
+
+
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect(); // ソケット接続を確立
+    }
+
+    // ソケット接続エラーを監視
+    socket.on("connect_error", () => {
+      setError("サーバーへの接続に失敗しました。");
+    });
+
+    // クリーンアップ
+    return () => {
+      socket.off("connect_error");
+    };
+  }, []);
+
+  const handleSendClick = () => {
+    if(!theme || theme.trim() === "") {
+      setError("お題入力して〜");
+      return;
+    }
+            if(!roomNumber) {
+              console.error("room number not found");
+              setError("ルームが見つかりません");
+              return;
+            }
+
+        // お題送信
+        socket.emit("sendTheme", { roomNumber, theme }, (response) => {
+          console.log("サーバーからのレスポンス:", response);
+
+          if (response.success) {
+            console.log("お題が送信されました：", theme);
+            setError(""); 
+          } else {
+            console.error("お題の送信に失敗:", response.message);
+            setError(response.message || "お題の送信に失敗しました。");
+          }
+        });
+    };
 
   useEffect(() => {
     if (isTimerRunning && timer > 0) {
@@ -52,6 +110,21 @@ export default function Artist() {
     }, 3000);
 
     return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    socket.on("assignRole", ({ role }) => {
+      console.log("新しい役割:", role);
+      if(role === "artist") {
+        window.location.href = "/answer";
+      } else {
+        window.location.href = "/artist";
+      }
+    });
+
+    return () => {
+      socket.off("assignRole");
+    };
   }, []);
 
   const startCountdown = () => {
@@ -118,7 +191,7 @@ export default function Artist() {
 
   const handlePopupCancel = () => {
     setIsPopupVisible(false);
-    setTopic(""); // Reset the topic
+    setTheme(""); // Reset the theme
   };
 
   const startGame = () => {
@@ -139,10 +212,10 @@ export default function Artist() {
       <div className={styles.controls}>
         <input
           type="text"
-          className={styles.topicInput}
+          className={styles.themeInput}
           placeholder="お題を決めよう"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
+          value={theme}
+          onChange={(e) => setTheme(e.target.value)}
         />
         <button className={styles.startButton} onClick={handleStart}>
           スタート
@@ -153,7 +226,7 @@ export default function Artist() {
         <div className={styles.popup}>
           <div className={styles.popupContent}>
             <p>本当にこのお題でいいですか？</p>
-            <button className={styles.okButton} onClick={handlePopupOK}>
+            <button className={styles.okButton} onClick={() => { handlePopupOK(); handleSendClick(); }}>
               OK
             </button>
             <button className={styles.cancelButton} onClick={handlePopupCancel}>

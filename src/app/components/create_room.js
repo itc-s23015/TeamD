@@ -32,6 +32,7 @@ const CreateRoom = () => {
         // ルームを作成
         socket.emit("createRoom", roomNumber, (response) => {
           if (response.success) {
+            sessionStorage.setItem("roomNumver", roomNumber);
             router.push(`/wait?room=${roomNumber}`); // `wait.js` に遷移
           } else {
             setError(response.message || "ルーム作成に失敗しました。");
