@@ -33,7 +33,7 @@
     margin-bottom: 20px;
 }
   
-.topicInput {
+.themeInput {
     font-size: 32px;
     padding: 10px;
     border: 2px solid #ccc;
@@ -42,7 +42,7 @@
     transition: border-color 0.3s ease;
 }
   
-.topicInput:hover {
+.themeInput:hover {
     border-color: #888;
 }
   

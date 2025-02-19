@@ -6,7 +6,6 @@ import { calculateScore, resetScore, getRoundScore, resetRound, getCurrentRound 
 import styles from "../styles/answer.module.css";
 import socket from "../socket";
 
-
 const Answer = () => {
   const router = useRouter();
   const [answer, setAnswer] = useState(""); 
@@ -43,23 +42,28 @@ const [roomNumber, setRoomNumber] = useState("");
   useEffect(() => {
     if(!socket.connected)socket.connect();
   // お題を受信
-  socket.on("themeReceived", ({ theme }) => {
+  // socket.on("themeReceived", ({ theme }) => {
+  const themeHandler = ({ theme }) => {
     console.log(`受信したお題: ${theme}`);
     setCorrectAnswer(theme);
-  });
+  };
 
   // サーバーから回答の結果を受信
-  socket.on("answerResult", ({ correct }) => {
+  // socket.on("answerResult", ({ correct }) => {
+  const answerHandler = ({ correct }) => {
     if (correct) {
       handleCorrectAnswer();
     } else {
       handleIncorrectAnswer();
     }
-  });
+  };
+
+  socket.on("themeReceived", themeHandler);
+  socket.on("answerResult", answerHandler);
 
   return () => {
-    socket.off("themeReceived");
-    socket.off("answerResult");
+    socket.off("themeReceived", themeHandler);
+    socket.off("answerResult", answerHandler);
   };
 }, []);
 
@@ -117,7 +121,7 @@ const handleNextRound = () => {
   socket.emit("roundOver", { roomNumber });
 
   setTimeout(() => {
-    window.location.reload();
+    router.push("/artist");
   }, 2000);
 }
 
@@ -164,7 +168,7 @@ useEffect(() => {
             disabled={isCorrect || lives <= 0} // 正解、ライフ０で入力不可
           />
 
-          <button type="button" className={styles.button} onClick={handleSubmit} disabled={isCorrect || lives <= 0}>
+          <button type="submit" className={styles.button} disabled={isCorrect || lives <= 0}>
             回答
           </button>
         </div>

@@ -92,22 +92,36 @@ socket.on("submitAnswer", ({ roomNumber, answer }) => {
     return;
   }
 
-  const correctAnswer = rooms[roomNumber].theme;
-  // 回答を判定（ひらがな・カタカナを区別）
-  const isCorrect = answer.trim() === correctAnswer;
+  const correctAnswer = rooms[roomNumber].theme.trim();
+  const userAnswer = answer.trim();
 
-  // if (isCorrect) {
-  //   console.log(`ルーム ${roomNumber}: 正解! 🎉`);
-  // } else {
-  //   console.log(`ルーム ${roomNumber}: 不正解 😢`);
-  // }
+  console.log(`ルーム ${roomNumber}: 受信した回答："${userAnswer}", 正解: "${correctAnswer}"`);
 
-console.log(`ルーム ${roomNumber}: 受信した回答："${answer}", 正解: "${correctAnswer}"`);
+  const normalizeText = (text) => {
+    return text
+      .replace(/\s/g, "")
+      .normalize("NFKC");
+  };
 
-  //  回答の結果を送信
-  io.to(roomNumber).emit("answerResult", { correct: isCorrect, message: isCorrect ? "正解！🎉" : "間違いです 😢" });
+  const normalizedCorrect = normalizeText(correctAnswer);
+  const normalizedUser = normalizeText(userAnswer);
+
+  console.log(`ルーム ${roomNumber}: 正規化後の回答："${normalizedUser}", 正解: "${normalizedCorrect}"`);
+
+  const isCorrect = normalizedUser === normalizedCorrect;
+
+  if (isCorrect) {
+    console.log(`✅ ルーム ${roomNumber}: 回答が正解です！`);
+    io.to(roomNumber).emit("answerResult", { correct: true, message: "正解！🎉" });
+
+    setTimeout(() => {
+      io.to(roomNumber).emit("roundOver", { roomNumber });
+    }, 2000);
+  } else {
+    console.log(`❌ ルーム ${roomNumber}: 回答が間違っています！`);
+    io.to(roomNumber).emit("answerResult", { correct: false, message: "間違いです 😢" });
+  }
 });
-    
 
   // ルームに参加する
   socket.on('joinRoom', (roomNumber, callback) => {

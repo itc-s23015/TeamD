@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import socket from "../socket";
 import styles from "../styles/artist.module.css";
+import { useRouter } from "next/navigation";
 
 export default function Artist() {
   const canvasRef = useRef(null);
@@ -17,6 +18,7 @@ export default function Artist() {
   const [countdown, setCountdown] = useState(null);
   const [welcomePopupVisible, setWelcomePopupVisible] = useState(true);
   const [error, setError] = useState(""); // エラーメッセージ用の状態を追加
+  const router = useRouter();
   
   const [roomNumber, setRoomNumber] = useState("");
 
@@ -116,14 +118,20 @@ export default function Artist() {
     socket.on("assignRole", ({ role }) => {
       console.log("新しい役割:", role);
       if(role === "artist") {
-        window.location.href = "/answer";
+        router.push("/artist");
       } else {
-        window.location.href = "/artist";
+        router.push("/answer");
       }
+    });
+
+    socket.on("forceTransition", ()=> {
+      console.log("回答者が終了したため、自動遷移");
+      router.push("/answer");
     });
 
     return () => {
       socket.off("assignRole");
+      socket.off("forceTransition")
     };
   }, []);
 
