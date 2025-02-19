@@ -135,6 +135,18 @@ export default function Artist() {
     };
   }, []);
 
+  useEffect (() => {
+    socket.on("gameOver", ({ message, roomNumber }) => {
+      alert(message);
+      sessionStorage.setItem("roomNumber", roomNumber);
+      router.push("/result");
+    });
+
+    return () => {
+      socket.off("gameOver");
+    };
+  }, []);
+
   const startCountdown = () => {
     let counter = 3;
     setCountdown(counter);

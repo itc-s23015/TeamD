@@ -125,6 +125,18 @@ const handleNextRound = () => {
   }, 2000);
 }
 
+useEffect (() => {
+  socket.on("gameOver", ({ message, roomNumber }) => {
+    alert(message);
+    sessionStorage.setItem("roomNumber", roomNumber);
+    router.push("/result");
+  });
+
+  return () => {
+    socket.off("gameOver");
+  };
+}, []);
+
 useEffect(() => {
   if (isCorrect || lives <= 0) {
     setTimeout(handleNextRound, 2000);

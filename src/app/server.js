@@ -31,11 +31,17 @@ io.on('connection', (socket) => {
       return;
     }
 
+    rooms[roomNumber] = {
+      users: new Map(),
+      theme: null,
+      roundCount: 0,
+    };
+
     // 部屋が存在しなければ作成
-    users.set(socket.id, 'create');
+    rooms[roomNumber].users.set(socket.id, 'create');
 
     // ユーザーをルームに追加（この時点では対戦相手を待つ状態）
-    rooms[roomNumber] = users;
+    // rooms[roomNumber] = users;
 
     console.log(`現在の部屋情報:`, rooms);
 
@@ -182,12 +188,19 @@ socket.on("submitAnswer", ({ roomNumber, answer }) => {
   });
 
   socket.on("roundOver", ({ roomNumber }) => {
-    console.log(`ルーム${roomNumber}のラウンド終了！！`);
-
     if(!rooms[roomNumber]) return;
 
-    const keyArray = Array.from(rooms[roomNumber].keys());
+    rooms[roomNumber].roundCount += 1;
+    console.log(`ルーム ${roomNumber}: 現在のラウンド数 ${rooms[roomNumber].roundCount}`);
 
+    if (rooms[roomNumber].roundCount >= 6) {
+      console.log(`ルーム ${roomNumber}: 6ラウンド終了〜リザルト画面へ遷移`);
+      io.to(roomNumber).emit("gameOver", { message: "ゲーム終了。リザルト画面へ遷移", roomNumber});
+
+      return;
+    }
+
+    const keyArray = Array.from(rooms[roomNumber].keys());
     const newRoles = {
       [keyArray[0]]: "answer",
       [keyArray[1]]: "artist",
