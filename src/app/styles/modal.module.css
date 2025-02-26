@@ -1,0 +1,74 @@
+/* modal.module.css */
+.overlay {
+    position: fixed;
+    font-size: large;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .modalContent {
+    text-align: left;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  
+  .modalContent h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .modalContent p {
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  .modalContent ul {
+    margin: 10px 0;
+    padding-left: 100px;
+  }
+  
+  .modalContent ul li {
+    margin-bottom: 5px;
+  }
+
+  .modal {
+    position: relative; /* 疑似要素の基準 */
+    background-color: rgb(219, 179, 69); /* 背景色を白に設定 */
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    color: black; /* テキスト色を黒に */
+    width: 500px; /* 最大幅を指定 */
+    text-align: center; /* コンテンツ中央寄せ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* モーダルの影 */
+    padding: 50px;
+    width: 700px;
+    z-index: 10;
+  }
+  
+  /* モーダルの左右の線 */
+  .modal:before,
+  .modal:after {
+    content: '';
+    position: absolute;
+    top: -7px;
+    width: 2px;
+    height: calc(100% + 14px); /* モーダル全体を覆う高さ */
+    background-color: black; /* 線の色を黒に */
+    z-index: -1;
+  }
+
+  .modal:before {
+    left: 7px; /* 左側の線を配置 */
+  }
+  
+  .modal:after {
+    right: 7px; /* 右側の線を配置 */
+  }
