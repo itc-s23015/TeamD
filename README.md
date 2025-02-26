@@ -17,13 +17,13 @@ WebRTCを使って交互にイラストを書きあって二人でイラスト�
 
 ## 開発環境と使用した技術
 
--Next(13.x以上)
--Node.js(18.x以上)
--volta(2.0.1)
--visual stadio Code(エディター)
--WebSocket
--WebRTC
--Socket.io(WebSocketのライブラリ)
+- Next(13.x以上)  
+- Node.js(18.x以上)
+- volta(2.0.1)
+- visual stadio Code(エディター)
+- WebSocket
+- WebRTC
+- Socket.io(WebSocketのライブラリ)
 
 ---
 
