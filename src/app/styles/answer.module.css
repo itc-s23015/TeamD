@@ -1,9 +1,12 @@
 .container {
-  text-align: center;
-  padding: 20px;
-  background-color: #fff5e1;
-  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fbe4c7;
   height: 100vh;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
 .imageWrapper {
@@ -72,6 +75,21 @@
 .button:hover {
   background-color: #e04444;
 }
+
+.videoContainer {
+  flex: 3;
+  background-color: white;
+  border: 2px solid #ccc;
+  position: relative;
+}
+
+.video {
+  width: 100%;
+  height: 650px; /* Canvas height slightly reduced */
+  cursor: crosshair;
+  display: block;
+}
+
 
 .message {
   /* margin-top: 20px; */
