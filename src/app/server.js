@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
-const { Socket } = require('socket.io-client');
+const { default: socket } = require('./socket');
 
 const app = express();
 const server = http.createServer(app);
@@ -57,9 +57,9 @@ io.on('connection', (socket) => {
       console.log(`部屋 ${roomNumber} に参加したユーザー:`, rooms);
 
       callback({ success: true });
-    }else if (rooms[roomNumber] && rooms[roomNumber].size == 2) {
+    } else if (rooms[roomNumber] && rooms[roomNumber].size == 2) {
       console.log('ただいま、このルームは満員なので、参加できません！')
-      callback({ success: false, message: 'このルームは満員です！'})
+      callback({ success: false, message: 'このルームは満員です！' })
     } else {
       console.log('指定した部屋がないんゴ...')
       callback({ success: false, message: '指定された部屋が存在しません。' });
@@ -124,6 +124,29 @@ io.on('connection', (socket) => {
     console.log(`切断後の部屋情報:`, rooms);
   });
 });
+
+socket.on('answer', data => {
+  console.log('answer_log');
+  rooms.filter(s => s.id !== socket.id).forEach(s => {
+    s.emit('answer', data);
+  });
+})
+
+socket.on('offer', data => {
+  console.log('offer_log');
+  rooms.filter(s => s.id !== socket.id).forEach(s => {
+    s.emit('offer', data);
+  });
+})
+
+socket.on('ice-candidate', data => {
+  console.log('ice-candidate_log');
+  rooms.filter(s => s.id !== socket.id).forEach(s => {
+    s.emit('ice-candidate', data);
+  });
+})
+
+
 
 const PORT = process.env.PORT || 4000; // 環境変数を使用してポートを設定
 server.listen(PORT, () => {

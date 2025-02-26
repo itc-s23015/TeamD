@@ -28,7 +28,7 @@ const Answer = ({ peerConnection }) => {
     }
 
     // WebRTC 追加
-    const canvas = document.createElement('canvas')
+    const canvas = document.getElementById('myCanvas')
     const video = document.getElementById('display')
 
 

@@ -1,18 +1,104 @@
+'use client';
+
 import { useState, useRef, useEffect } from "react";
 import styles from "../styles/artist.module.css";
+import socket from "../socket";
+import "webrtc-adapter";
 
 export default function Artist() {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lineWidth, setLineWidth] = useState(10);
   const [color, setColor] = useState("#000000");
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(30);
   const [topic, setTopic] = useState("");
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [isEraserActive, setIsEraserActive] = useState(false);
   const [countdown, setCountdown] = useState(null);
   const [welcomePopupVisible, setWelcomePopupVisible] = useState(true);
+
+  useEffect(() => {
+    const servers = {
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        {
+          urls: "turn:34.16.13.218:3478",
+          username: "teamD",
+          credential: "irasutogame"
+        }
+      ]
+    }
+
+    // WebRTC 追加
+    const canvas = document.getElementById('myCanvas')
+    const video = document.getElementById('display')
+
+
+    const signalingServer = socket
+    const peerConnection = new RTCPeerConnection(servers);
+    const stream = canvas.captureStream(30);
+    stream.getTracks().forEach(track => peerConnection.addTrack(track, stream))
+
+    // actionOffer();
+
+    // function actionOffer() {
+      peerConnection.createOffer()
+        .then(offer => {
+          return peerConnection.setLocalDescription(offer);
+        })
+        .then(() => {
+          signalingServer.emit('offer', peerConnection.localDescription)
+        })
+        .catch(err => console.log('Error creating offer: ', err))
+    // }
+
+    peerConnection.onicecandidate = e => {
+      if (e.candidate) {
+        signalingServer.emit('ice-candidate', e.candidate)
+      }
+    }
+
+    peerConnection.ontrack = async e => {
+      if (video.srcObject !== e.streams[0]) {
+        video.srcObject = e.streams[0]
+        if (video.paused) {
+          await video.play()
+          console.log('video is paused');
+        }
+      }
+    }
+
+    signalingServer.on('answer', data => {
+      const remoteAnswer = new RTCSessionDescription(data)
+      peerConnection.setRemoteDescription(remoteAnswer)
+        .catch(err => console.log('Error setting remote answer: ', err))
+    })
+
+
+    signalingServer.on('offer', data => {
+      console.log('offer', data)
+      const remoteOffer = new RTCSessionDescription(data)
+      peerConnection.setRemoteDescription(remoteOffer)
+        .then(() => {
+          return peerConnection.createAnswer()
+        })
+        .then(answer => {
+          return peerConnection.setLocalDescription(answer)
+        })
+        .then(() => {
+          signalingServer.emit('answer', peerConnection.localDescription)
+        })
+        .catch(err => console.log('Error creating or setting answer: ', err))
+    })
+
+    signalingServer.on('ice-candidate', data => {
+      console.log('ice-candidate: ', data)
+      peerConnection.addIceCandidate(new RTCIceCandidate(data))
+        .catch(err => console.log('Error adding ICE candidate: ', err))
+    })
+
+  });
 
   const getMousePosition = (e) => {
     const canvas = canvasRef.current;
@@ -171,7 +257,7 @@ export default function Artist() {
 
       <div className={styles.main}>
         <div className={styles.canvasContainer}>
-          <canvas
+          <canvas id="myCanvas"
             ref={canvasRef}
             width={800}
             height={550}
