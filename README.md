@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# イラスト伝言ゲーム
 
-## Getting Started
+---
 
-First, run the development server:
+## ゲーム構成
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+WebRTCを使って交互にイラストを書きあって二人でイラスト伝言ゲームを作ります。
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+回数は３セット戦で行い、最後に合計ポイントのスコアが高いほうが勝ちになるゲームです。スコアの決め方は正解するまでの速度と回答回数に応じて変化します。ポイントは回答者から描き手に入ります。
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+最初はタイトル画面でスタートボタンを押すとルーム(部屋)番号を決める画面に移り、ルーム番号を指定します。そして、相手が見つかるまで待機画面が表示されます。相手が見つかった場合は「 対戦相手が見つかりました! 」と表示し、それぞれの画面に切り替わりゲームがスタートします。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+正解か不正解かの判定はイラストを書く人がお題を決めてフォームのようなものに書き込み、それを正解とします。そして相手は同じくラストを見てフォームのようなものに正解だと思うものを書き込み、イラストを書いた人の正解と一致した場合にプログラミングで判定してスコアを決めます。
+間違いだった場合はそのまま解答することができます。(絵師が絵を書いてる途中に回答可) 最後に結果発表で、その勝負ごとのスコアをそれぞれ表示していき、最後に合計のスコアを表示し、どちらの勝ちかを判定します。
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 開発環境と使用した技術
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-Next(13.x以上)
+-Node.js(18.x以上)
+-volta(2.0.1)
+-visual stadio Code(エディター)
+-WebSocket
+-WebRTC
+-Socket.io(WebSocketのライブラリ)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 技術の説明
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### WebRTC
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+WebRTCとは、インターネットを介してWebブラウザ同士が直接通信できる技術のことです。例えば、Googleが提供している「Google Meet」などのオンライン会議ツールにも利用されており、音声通話やビデオ通話、画面共有といったリアルタイムのやり取りを可能にしています。この機能を使って今回私達は、イラストを書いて表示しているCanvas部分をブラウザ間で共有をするという目的でこのWebRTCという技術を使用しました。
+
+---
+
+### WebSocket
+
+WebSocketは、サーバーとブラウザ(クライアント)がリアルタイムで双方向通信を行うための技術です。通常のWeb通信では、クライアントがサーバーに対して、リクエストを送るたびにサーバーが応答する「一方通行」の仕組みですが、WebSocketを使うと、一度接続を確立すれば、サーバーとクライアントの間で常にデータをやり取りできるようになり、こちらからリクエストを送らなくてもサーバー側から応答を返すことができる技術です
+
+---
+
+### Socket.io
+
+Socket.ioという技術は、このWebSocketと同様に双方向でリアルタイム通信を行うためのライブラリになっておりまして、WebSocketの実装を簡単にできる仕組みです。Socket.ioを使う利点としては、WebSocketは接続が切れてしまうと、自動的に再接続されることがないんですが、こちらのSocket.ioは自動的に再接続してくれるというのがポイントです。
+
+---
+
+## 参考にした物
+
+[WebRTCとCanvas共有](https://dev.to/nyxtom/realtime-collaborative-drawing-with-canvas-and-webrtc-2d01)
+
